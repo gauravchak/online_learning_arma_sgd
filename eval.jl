@@ -31,7 +31,7 @@ end
 function evaluate(_ret_frame)
     # Implement/call your functions here, feel free to import other modules
 	_logret_matrix = array(_ret_frame[2:size(_ret_frame)[2]])
-	_weights_matrix = main(_ret_frame)
+	_weights_matrix = main(_ret_frame, 200, 0.5, false, 50, true, 0.8)
     #_weights_matrix = ones(size(_logret_matrix)[1], size(_logret_matrix)[2]) ./ size(_logret_matrix)[2] # Equal weight by default, implement your own method to compute weights here
     return _weights_matrix
 end
