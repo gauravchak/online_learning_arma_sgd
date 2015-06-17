@@ -98,6 +98,7 @@ function evalWeights(signalVec::Array{Float64}, balancing_Factor::Real)
     return weight
 end
 
+# Wrapper function
 function main(dt::DataFrame, windowSize::Int64, learningRate::Real, intercept::Bool, errorWindow::Int64, logBias::Bool, balancingFactor::Real)
     predSignal = getPredSignals(dt, windowSize, learningRate, intercept, errorWindow, logBias)
     shape_predSignal = size(predSignal)
