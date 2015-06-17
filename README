@@ -5,10 +5,10 @@ Step 1: Predicting the log return of each signal at all dates using the informat
 x[t] = a_1 * x[t-1] + a_2 * x[t-2] + ....... + a_p * x[t-p] + c + b_1 * e[t-1] + b_2 * e[t-2] + ....... + b_q * e[t-q] 
 
 where,
-x[t] = log retrun of the signal at time t.
+x[t] = log return of the signal at time t.
 e[t] = actual_x[t] - predicted_x[t], denotes the prediction error at time instant t
 c    = intercept
-This is a ARMA(p,q) (Auto-regressive Moving Average Model). The parameters are estimated using Stochastic Gradient Descent assuming L2-norm are the loss function. 
+This is a ARMA(p,q) (Auto-regressive Moving Average Model). The parameters are estimated using Stochastic Gradient Descent assuming L2-norm as the loss function. 
 Please Note: Either of p or q can be set to zero but they cannot be set to zero together simultaneously
 
 In each iteration the update step is:
