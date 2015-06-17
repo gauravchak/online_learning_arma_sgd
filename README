@@ -9,10 +9,18 @@ x[t] = log retrun of the signal at time t.
 e[t] = actual_x[t] - predicted_x[t], denotes the prediction error at time instant t
 c    = intercept
 This is a ARMA(p,q) (Auto-regressive Moving Average Model). The parameters are estimated using Stochastic Gradient Descent assuming L2-norm are the loss function. 
+Please Note: Either of p or q can be set to zero but they cannot be set to zero together simultaneously
 
 In each iteration the update step is:
 a_i = a_i - learning_rate * (x_predicted[t] - x_actual[t]) * x[t-i]
 b_j = b_j - learning_rate * (x_predicted[t] - x_actual[t]) * e[t-j]
+
+After making the predictions a log bias correction term to added to remove the bias which results when predictions are made in log domain. For more details refer: 
+http://www.vims.edu/people/newman_mc/pubs/Newman1993.pdf
+
+logBiasCorrection = (Mean Squared Error in the log domain)/2
+therefore,
+x[t] = x[t] + logBiasCorrection
 
 Step 2: Assigning the weights.
 To account for the risk we consider balancing_factor. 
@@ -62,6 +70,7 @@ Computes the predicted values of the log returns of the input signal
 @param learningRate
 @param   intercept: Boolean variable to select if intercept is part of model equation, i.e., if set to false the model equation won't have c in it.
 @param errorWindow: Order of the Moving-Average Model, i.e., the value of q in the model equation
+@param 	   logBias: Boolean Operator to select if log bias correction has to be used
 
 @function calls: hypothesis: calculate the predicted value of the log returns of the signal
 @function calls: updateWeights
@@ -76,6 +85,7 @@ Computes the predicted log returns of each signal
 @param learningRate
 @param   intercept: Boolean variable to select if intercept is part of model equation, i.e., if set to false the model equation won't have c in it.
 @param errorWindow: Order of the Moving-Average Model, i.e., the value of q in the model equation
+@param 	   logBias: Boolean Operator to select if log bias correction has to be used
 
 @function calls: getPred: compute the predicted log returns of each signal
 
@@ -89,3 +99,23 @@ Evaluate the weights of various signals of the portfolio
 
 @output returns the array of weights of all signals on the date
 ##########################################################################################################################################################################
+@Function main
+A wrapper function which calls getPredSignals and evalWeights
+
+@param  		dt: Data Frame of signals
+@param  windowSize: Order of the Auto-Regressive Model, i.e., the value of p in the model equation
+@param learningRate
+@param   intercept: Boolean variable to select if intercept is part of model equation, i.e., if set to false the model equation won't have c in it.
+@param errorWindow: Order of the Moving-Average Model, i.e., the value of q in the model equation
+@param 	   logBias: Boolean Operator to select if log bias correction has to be used
+@param balancing_Factor
+
+@function calls: getPredSignals
+@function calls: evalWeights
+
+@output returns the weight of each signal at all dates
+##########################################################################################################################################################################
+
+Function eval.py has been modified to eval.jl
+To run the code:
+__init__("path_of_the_file")
