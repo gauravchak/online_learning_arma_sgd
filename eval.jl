@@ -1,4 +1,6 @@
 using DataFrames
+include ("sgd.jl")
+
 function compute_log_returns(_logret_matrix, _weight_matrix)
     _log_returns = zeros(size(_logret_matrix)[1])
     for i in 1:size(_logret_matrix)[1]
@@ -30,16 +32,15 @@ end
 
 function evaluate(_ret_frame)
     # Implement/call your functions here, feel free to import other modules
-	_logret_matrix = array(_ret_frame[2:size(_ret_frame)[2]])
-	_weights_matrix = main(_ret_frame, 200, 0.5, false, 50, true, 0.8)
-    #_weights_matrix = ones(size(_logret_matrix)[1], size(_logret_matrix)[2]) ./ size(_logret_matrix)[2] # Equal weight by default, implement your own method to compute weights here
+    _weights_matrix = main(_ret_frame, 200, 0.5, false, 50, true, 0.8)
     return _weights_matrix
 end
 
 function __init__(path)
         _returns_data_filename = path
         _ret_frame = DataFrames.readtable(_returns_data_filename)
-        _logret_matrix = array(_ret_frame[2:size(_ret_frame)[2]])
+#        _logret_matrix = array(_ret_frame[2:size(_ret_frame)[2]])
+        _logret_matrix = convert(Array,(_ret_frame[2:size(_ret_frame)[2]]))
         
         for name in names(_ret_frame)[2:length(_ret_frame)]
             perfStats = perfstats(_ret_frame[name])
@@ -54,3 +55,5 @@ function __init__(path)
         getPerformanceStats(_logret_matrix, _weight_matrix)
 
 end
+
+__init__(ARGS[1])

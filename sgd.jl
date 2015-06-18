@@ -79,7 +79,7 @@ end
 
 # Evaluate the weight of each signal at a given date
 function evalWeights(signalVec::Array{Float64}, balancing_Factor::Real)
-    pos_loc = signalVec .>= 0
+    pos_loc = ( signalVec .>= 0 )
     PositiveSignal = signalVec[pos_loc]
     NegativeSignal = signalVec[!pos_loc]
     
@@ -105,7 +105,7 @@ function main(dt::DataFrame, windowSize::Int64, learningRate::Real, intercept::B
     weights = zeros(shape_predSignal[1], shape_predSignal[2])
     
     for i in 1:size(predSignal)[1]
-        weights[i,:] = evalWeights(array(predSignal[i,:]), balancingFactor)
+        weights[i,:] = evalWeights(convert(Array, (predSignal[i,:])), balancingFactor)
     end
     return weights
 end

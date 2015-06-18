@@ -26,7 +26,7 @@ Step 2: Assigning the weights.
 To account for the risk we consider balancing_factor. 
 
 The signals with positive returns are assigned weights in proportion of their predictions, which sum up to balancing_factor.
-The signal with negative predictions are assigned weights in inverse ratio of their predicted magnitude and these weights sum up to 1 - balancing factor.
+The signals with negative predictions are assigned weights in inverse ratio of their predicted magnitude and these weights sum up to ( 1 - balancing factor ).
 
 Description of various module:
 
