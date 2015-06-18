@@ -40,14 +40,13 @@ end
 function process_input_data_file(_returns_data_filename)
     _ret_frame = DataFrames.readtable(_returns_data_filename);
     _logret_matrix = convert(Array{Float64,2},(_ret_frame[2:size(_ret_frame)[2]]))
-    
-    for i = 1:size(_logret_matrix[2])
+    for i = 1:size(_logret_matrix)[2]
         perfStats = perfstats(_logret_matrix[:,i])
         _annualized_percent_returns = perfStats[1]
         _annualized_percent_stdev = perfStats[2]
         _sharpe = perfStats[3]
     
-        println("$name Annualise_percent_returns are $_annualized_percent_returns Annualise_percent_stdev is $_annualized_percent_stdev Sharpe is $_sharpe")
+        println("Signal_$i Annualise_percent_returns are $_annualized_percent_returns Annualise_percent_stdev is $_annualized_percent_stdev Sharpe is $_sharpe")
     end
 
     _weight_matrix = compute_weights_matrix(_logret_matrix);
