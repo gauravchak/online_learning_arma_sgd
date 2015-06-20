@@ -1,3 +1,4 @@
+#!/usr/bin/env julia
 using DataFrames
 
 function compute_log_returns(_logret_matrix, _weight_matrix)
