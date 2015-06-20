@@ -63,7 +63,7 @@ end
 
 # @output predicted log returns on each date
 # """ -> 
-function getPred( signalCol::DataArray{Float64,1}, windowSize::Int64, learningRate::Real, intercept::Bool, errorWindow::Int64, logBias::Bool)
+function getPred( signalCol::Array{Float64,1}, windowSize::Int64, learningRate::Real, intercept::Bool, errorWindow::Int64, logBias::Bool)
     # initializing the Auto Regressive Part
     if intercept
         theta = ones(windowSize+1)
@@ -128,7 +128,7 @@ function getPredSignals( _logret_matrix::Array{Float64,2}, windowSize::Int64, le
     predSignal = zeros(_logret_matrix)
     #getting predicted log returns for each signal
     for i = 1:nsignals
-        predSignal[:,i] = getPred(_logret_matrix[i], windowSize, learningRate, intercept, errorWindow, logBias)
+        predSignal[:,i] = getPred(_logret_matrix[:,i], windowSize, learningRate, intercept, errorWindow, logBias)
     end
     
     return predSignal
