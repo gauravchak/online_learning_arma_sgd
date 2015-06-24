@@ -64,7 +64,7 @@ end
 #
 #@output predicted log returns on each date
 #""" -> 
-function getPred( signalCol::DataArray{Float64,1}, windowSize::Int64, learningRate::Real, intercept::Bool, errorWindow::Int64, logBias::Bool)
+function getPred( inputSignalCol::DataArray{Float64,1}, windowSize::Int64, learningRate::Real, intercept::Bool, errorWindow::Int64, logBias::Bool)
     # initializing the Auto Regressive Part
     if intercept
         theta = ones(windowSize+1)
@@ -75,14 +75,15 @@ function getPred( signalCol::DataArray{Float64,1}, windowSize::Int64, learningRa
         theta = ones(windowSize)
         x = zeros(windowSize)
     end
-    
+
     # intializing the moving average part
     phi = ones(errorWindow)
     e   = zeros(errorWindow)
-    predCol = zeros(length(signalCol))
-    
+    predCol = zeros(length(inputSignalCol))
+
     theta = [theta, phi]
-    for i in 1:(length(signalCol) - 1)
+    for i in 1:(length(inputSignalCol) - 1)
+        signalCol = inputSignalCol[1:i]
         if (windowSize > 0)
             if intercept
                 x = [signalCol[i], x[1:(windowSize-1)], x[windowSize + 1]]
@@ -91,14 +92,14 @@ function getPred( signalCol::DataArray{Float64,1}, windowSize::Int64, learningRa
                 x = [signalCol[i], x[1:(windowSize-1)]]
             end
         end
-        
+
         if (errorWindow > 0)
             e = [(signalCol[i] - predCol[i]), e[1:(errorWindow-1)]]
         end
 
-        predCol[i+1] = hypothesis(theta, [x, e])   
-        theta = updateWeights(theta, [x, e], signalCol[i+1], learningRate)
-        
+        predCol[i+1] = hypothesis(theta, [x, e])
+        theta = updateWeights(theta, [x, e], inputSignalCol[i+1], learningRate)
+
         # log bias Correction
         if logBias & (i > 3)
             mse = sum((predCol[2:i] - signalCol[2:i]).^2)/(i-3)
@@ -107,6 +108,7 @@ function getPred( signalCol::DataArray{Float64,1}, windowSize::Int64, learningRa
     end
     return predCol
 end
+
 
 #@doc doc"""
 #@Function getPredSignals
@@ -190,7 +192,7 @@ function main(dt::DataFrame, windowSize::Int64, learningRate::Real, intercept::B
     weights = zeros(shape_predSignal[1], shape_predSignal[2])
     
     for i in 1:size(predSignal)[1]
-        weights[i,:] = evalWeights(convert(Array, (predSignal[i,:])), balancingFactor)
+        weights[i,:] = evalWeights(array(predSignal[i,:]), balancingFactor)
     end
     return weights
 end
