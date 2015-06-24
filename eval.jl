@@ -39,8 +39,7 @@ end
 function __init__(path)
         _returns_data_filename = path
         _ret_frame = DataFrames.readtable(_returns_data_filename)
-#        _logret_matrix = array(_ret_frame[2:size(_ret_frame)[2]])
-        _logret_matrix = convert(Array,(_ret_frame[2:size(_ret_frame)[2]]))
+        _logret_matrix = array(_ret_frame[2:size(_ret_frame)[2]])
         
         for name in names(_ret_frame)[2:length(_ret_frame)]
             perfStats = perfstats(_ret_frame[name])
